@@ -12,6 +12,7 @@ Description=P25 Gateway Service
 # systemctl enable systemd-networkd-wait-online.service
 
 After=network-online.target syslog.target netcheck.service
+Requires=netcheck.service
 Wants=network-online.target
 
 [Service]
@@ -20,6 +21,7 @@ Restart=always
 RestartSec=3
 StandardOutput=null
 WorkingDirectory=/opt/P25Gateway
+ExecStartPre = /bin/sh -c 'echo "Starting P25Gateway: [`date +%T.%3N`]" >> /var/log/netcheck'
 ExecStart=/opt/P25Gateway/P25Gateway /opt/P25Gateway/P25Gateway.ini
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
